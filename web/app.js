@@ -111,8 +111,8 @@ function sparkline(closes, w = 96, h = 28) {
   const lo = Math.min(...tail), hi = Math.max(...tail), span = hi - lo || 1;
   const pts = tail.map((c, i) => `${(i / (tail.length - 1)) * w},${h - 3 - ((c - lo) / span) * (h - 6)}`).join(" ");
   const up = tail[tail.length - 1] >= tail[0];
-  return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" aria-hidden="true" style="direction:ltr">
-    <polyline points="${pts}" fill="none" stroke="${up ? "var(--good)" : "var(--critical)"}" stroke-width="1.6"
+  return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" aria-hidden="true" style="direction:ltr">
+    <polyline points="${pts}" fill="none" stroke="${up ? "var(--good)" : "var(--critical)"}" stroke-width="1.6" vector-effect="non-scaling-stroke"
       stroke-linejoin="round" stroke-linecap="round"/></svg>`;
 }
 
@@ -350,10 +350,10 @@ function renderIdeas() {
     const q = i.s?.quote, sc = i.s?.score, e = state.earnBySym[i.symbol];
     return `<article class="idea" data-sym="${esc(i.symbol)}" tabindex="0">
       <div class="row">
-        <div style="min-width:0"><div class="s">${esc(i.symbol)}</div><div class="n">${esc(q?.name || "")}</div></div>
+        <div class="who"><div class="s">${esc(i.symbol)}</div><div class="n">${esc(q?.name || "")}</div></div>
         <div class="price">${q ? money(q.price, q.currency) : `<span class="skel"></span>`}<div>${q ? pct(q.change_pct, 2) : ""}</div></div>
       </div>
-      <div class="row" style="align-items:center">${i.s ? sparkline(i.s.series.closes, 140, 34) : ""}${scoreHtml(sc, true)}</div>
+      <div class="row" style="align-items:center"><div class="spark">${i.s ? sparkline(i.s.series.closes, 140, 34) : ""}</div>${scoreHtml(sc, true)}</div>
       <div class="tags">${(sc?.tags || []).map(t => `<span class="chip">${esc(t)}</span>`).join("")}
         ${e ? `<span class="chip soon">דוח ${inDays(e.days)}</span>` : ""}</div>
       <div class="because">דומה ל: <bdi class="num">${i.because.map(esc).join(", ")}</bdi>
